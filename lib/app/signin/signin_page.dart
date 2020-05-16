@@ -1,4 +1,6 @@
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter/material.dart';
+import 'package:time_tracker_flutter_course/app/signin/email_sign_in_page.dart';
 import 'package:time_tracker_flutter_course/app/signin/signin_button.dart';
 import 'package:time_tracker_flutter_course/app/signin/social_signin_button.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
@@ -10,11 +12,39 @@ class SignInPage extends StatelessWidget {
 
   Future<void> _signInAnonymously() async{
     try {
-    await auth.signInAnonymously();
-     
+      await auth.signInAnonymously();
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<void> _signInWithGoogle() async{
+    try {
+      await auth.signInWithGoogle();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _signInWithApple() async{
+    try {
+      final bool appleSignInAvailable = await AppleSignIn.isAvailable();
+      if(appleSignInAvailable){
+         await auth.signInWithApple(scopes: [Scope.email, Scope.fullName]);
+      }else{
+        print("Sorry Apple SignIn not allowed for this Device!");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void _signInWithEmail(BuildContext context){
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (context)=> EmailSignInPage(auth: auth)),
+    );
   }
 
   @override
@@ -24,12 +54,12 @@ class SignInPage extends StatelessWidget {
         title: Text('Time Tracker'),
         elevation: 10.0,
       ),
-      body: _buildContent(),
+      body: _buildContent(context),
       backgroundColor: Colors.grey[200],
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16),
       child: Column(
@@ -50,22 +80,33 @@ class SignInPage extends StatelessWidget {
               text:"Sign-In with Google",
               textColor: Colors.black87,
               color: Colors.white,
-              onPressed: ()=>{},
+              onPressed: _signInWithGoogle,
             ),
             SizedBox(height: 10,),
-            SocialSignInButton(
-              assetName: 'images/facebook-logo.png',
-              text:"Sign-In with Facebook",
-                color: Color(0xFF334D92),
-              textColor: Colors.white,
-              onPressed: ()=>{},
+            // SocialSignInButton(
+            //   assetName: 'images/facebook-logo.png',
+            //   text:"Sign-In with Facebook",
+            //     color: Color(0xFF334D92),
+            //   textColor: Colors.white,
+            //   onPressed: ()=>{},
+            // ),
+            //  SignInButton(
+            //   text: "Sign-In with AppleID",
+            //   color: Colors.black,
+            //   textColor: Colors.white,
+            //   onPressed: ()=>{},
+            // ),
+            AppleSignInButton(
+              style: ButtonStyle.black,
+              type: ButtonType.signIn,
+              onPressed: ()=>_signInWithApple(),
             ),
             SizedBox(height: 10,),
             SignInButton(
               text: "Sign-In with Email",
               color: Colors.teal[700],
               textColor: Colors.white,
-              onPressed: ()=>{},
+              onPressed: ()=> _signInWithEmail(context),
             ),
             SizedBox(height: 10,),
             Text(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
 import 'app/landing_page.dart';
 
-void main() {
+void main(){
   runApp(MyApp());
 }
 

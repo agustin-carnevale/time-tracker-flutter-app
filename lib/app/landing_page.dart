@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:time_tracker_flutter_course/app/home/home_page.dart';
+import 'package:time_tracker_flutter_course/app/signin/apple_signin_available.dart';
 import 'package:time_tracker_flutter_course/app/signin/signin_page.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
 
