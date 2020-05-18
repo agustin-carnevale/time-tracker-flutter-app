@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "Flutter",
             "request": "launch",
@@ -11,3 +12,10 @@
         }
     ]
 }
+
+
+// Open both Android Emulator and IOS Simulator
+// terminal
+// flutter run -d all
+// r -> hot reload
+// R -> Hot restart
