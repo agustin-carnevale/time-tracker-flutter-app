@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:time_tracker_flutter_course/app/home/home_page.dart';
+import 'package:time_tracker_flutter_course/app/home/jobs/jobs_page.dart';
 import 'package:time_tracker_flutter_course/app/signin/signin_page.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
+import 'package:time_tracker_flutter_course/services/database.dart';
 
 class LandingPage extends StatelessWidget {
   @override
@@ -13,10 +14,13 @@ class LandingPage extends StatelessWidget {
       builder: (context,snapshot) {
         if (snapshot.connectionState == ConnectionState.active){
           User user = snapshot.data;
-          if (user ==null){
+          if (user == null){
             return SignInPage.create(context);
           }else{
-            return HomePage();
+            return Provider<Database>(
+              create: (_) => FirestoreDatabase(uid: user.uid),
+              child: JobsPage()
+            );
           }
         }else{
           return Scaffold(
