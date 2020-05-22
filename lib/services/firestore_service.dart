@@ -6,18 +6,24 @@ class FirestoreService {
   FirestoreService._();
   static final instance = FirestoreService._();
 
-  Future<void> setData({String path, Map<String, dynamic> data}) async {
+  Future<void> setData({@required String path, @required Map<String, dynamic> data}) async {
     final reference = Firestore.instance.document(path);
-    print('FIRESTORE: $path => $data');
+    //print('FIRESTORE: $path => $data');
     await reference.setData(data);
   }
 
   Stream<List<T>> collectionStream<T>({
     @required String path, 
-    @required T builder(Map<String, dynamic> data)
+    @required T builder(Map<String, dynamic> data,  String documentID),
   }){
     final reference = Firestore.instance.collection(path);
     final snapshots = reference.snapshots();
-    return snapshots.map((snapshot) => snapshot.documents.map((e) => builder(e.data)).toList());
+    return snapshots.map((snapshot) => snapshot.documents.map((e) => builder(e.data, e.documentID)).toList());
+  }
+
+  Future<void> deleteData({@required String path}) async{
+    final reference = Firestore.instance.document(path);
+    print('FIRESTORE (delete): $path');
+    await reference.delete();
   }
 }
