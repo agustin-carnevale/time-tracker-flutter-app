@@ -5,8 +5,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:apple_sign_in/apple_sign_in.dart';
 
 class User {
-  User({@required this.uid});
+  User({@required this.uid, @required this.displayName, @required this.photoUrl});
   final String uid;
+  final String photoUrl;
+  final String displayName;
 }
 
 abstract class AuthBase {
@@ -27,7 +29,11 @@ class Auth implements AuthBase {
     if (user == null) {
       return null;
     }
-    return User(uid: user.uid);
+    return User(
+      uid: user.uid,
+      displayName: user.displayName,
+      photoUrl: user.photoUrl,
+    );
   }
 
   @override
