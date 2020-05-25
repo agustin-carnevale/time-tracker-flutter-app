@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:time_tracker_flutter_course/app/signin/validators.dart';
 
 enum EmailSignInFormType { signIn, register }
@@ -29,16 +30,15 @@ class EmailSignInModel with EmailAndPasswordValidators {
       passwordValidator.isValid(password) &&
       !isLoading;
 
-  String get passwordErrorText{
-    bool showErrorText =
-        submitted && !passwordValidator.isValid(password);
+  String get passwordErrorText {
+    bool showErrorText = submitted && !passwordValidator.isValid(password);
     return showErrorText ? invalidPasswordErrorText : null;
-  }     
+  }
 
-  String get emailErrorText{
+  String get emailErrorText {
     bool showErrorText = submitted && !emailValidator.isValid(email);
     return showErrorText ? invalidEmailErrorText : null;
-  }     
+  }
 
   EmailSignInModel copyWith({
     String email,
@@ -55,4 +55,24 @@ class EmailSignInModel with EmailAndPasswordValidators {
       submitted: submitted ?? this.submitted,
     );
   }
+
+  @override
+  int get hashCode =>
+      hashValues(email, password, formType, isLoading, submitted);
+
+  @override
+  bool operator ==(other) {
+    if (identical(this, other)) return true;
+    if (runtimeType != other.runtimeType) return false;
+    final EmailSignInModel otherModel = other;
+    return email == otherModel.email &&
+        password == otherModel.password &&
+        formType == otherModel.formType &&
+        isLoading == otherModel.isLoading &&
+        submitted == otherModel.submitted;
+  }
+
+  @override
+  String toString() =>
+      'email: $email, password: $password, formType: $formType, isLoading: $isLoading, submitted: $submitted';
 }
