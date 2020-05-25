@@ -8,6 +8,8 @@ import 'package:time_tracker_flutter_course/common_widgets/platform_exception_al
 import 'package:time_tracker_flutter_course/services/auth.dart';
 
 class EmailSignInFormStateful extends StatefulWidget with EmailAndPasswordValidators {
+  EmailSignInFormStateful({Key key, this.onSignedIn}) : super(key: key);
+  final VoidCallback onSignedIn;
 
   @override
   _EmailSignInFormStatefulState createState() => _EmailSignInFormStatefulState();
@@ -50,7 +52,9 @@ class _EmailSignInFormStatefulState extends State<EmailSignInFormStateful> {
       }else{
         await auth.createUserWithEmailAndPassword(_email, _password);
       }
-      Navigator.of(context).pop();
+      if (widget.onSignedIn != null){
+        widget.onSignedIn();
+      }
     }on PlatformException catch(e){
       PlatformExceptionAlertDialog(title: "Sign In Failed", exception: e).show(context);
     }finally{
@@ -114,6 +118,7 @@ class _EmailSignInFormStatefulState extends State<EmailSignInFormStateful> {
   TextField _buildPasswordTextField() {
     bool showErrorText = _submitted && !widget.passwordValidator.isValid(_password);
     return TextField(  
+      key: Key('password'),
       controller: _passwordController,
       focusNode: _passwordFocusNode,
       decoration: InputDecoration(
@@ -131,6 +136,7 @@ class _EmailSignInFormStatefulState extends State<EmailSignInFormStateful> {
   TextField _buildEmailTextField() {
     bool showErrorText = _submitted && !widget.emailValidator.isValid(_email);
     return TextField(  
+      key: Key('email'),
       controller: _emailController,
       focusNode: _emailFocusNode,
       decoration: InputDecoration(
